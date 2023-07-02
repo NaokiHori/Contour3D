@@ -1,0 +1,59 @@
+name: CI
+
+on:
+
+  push:
+    branches:
+      - main
+    paths:
+      - include/**
+      - src/**
+      - SimpleDecomp/**
+
+jobs:
+
+  build-and-run:
+    name: Build and execute
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      checks: none
+      contents: write
+      deployments: none
+      id-token: none
+      issues: none
+      discussions: none
+      packages: none
+      pages: none
+      pull-requests: none
+      repository-projects: none
+      security-events: none
+      statuses: none
+    steps:
+      - name: Install dependencies
+        run: |
+          sudo apt-get -y update && \
+          sudo apt-get -y install make libopenmpi-dev imagemagick
+      - name: Checkout repository
+        uses: actions/checkout@main
+        with:
+          ref: ${{ github.ref_name }}
+          submodules: "true"
+      - name: Compile
+        run: |
+          make all
+      - name: Run case
+        run: |
+          mpirun -n 2 --oversubscribe ./a.out
+      - name: Convert ppm to jpg to make file size smaller
+        run: |
+          convert output.ppm output.jpg
+      - name: Push artifact
+        run: |
+          git config --local user.email "36466440+NaokiHori@users.noreply.github.com"
+          git config --local user.name "NaokiHori"
+          git switch -c artifact
+          git add output.jpg
+          git commit -m "Update image" -a || true
+          git push -f origin artifact
+
