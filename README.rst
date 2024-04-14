@@ -2,7 +2,7 @@
 Contour 3D
 ##########
 
-|CI|_ |License|_ |LastCommit|_
+|CI| |License| |LastCommit|
 
 .. |CI| image:: https://github.com/NaokiHori/Contour3D/actions/workflows/ci.yml/badge.svg
 .. _CI: https://github.com/NaokiHori/Contour3D/actions/workflows/ci.yml
@@ -16,9 +16,6 @@ Contour 3D
 .. image:: https://github.com/NaokiHori/Contour3D/blob/main/.github/thumbnail.jpg
    :target: https://youtu.be/CbF5Bs9Jf30
    :width: 800
-
-.. contents::
-   :depth: 1
 
 ********
 Overview
@@ -35,8 +32,8 @@ This library does not have any additional dependencies on X, Qt, VTK, OpenGL, et
 Caveat
 ******
 
-In most cases, I recommend using other software options that offer more comprehensive features since the feature set of this library is limited.
-This is because the original motivation was to visualise and understand the flow fields intuitively as a movie, without the support of a graphical library.
+The motivation of this project is to visualise the (flow) fields quickly and intuitively without the support of graphical libraries.
+For beautiful and comprehensive renderings, use other software options that offer more features.
 
 **********
 Dependency
@@ -45,7 +42,7 @@ Dependency
 * `C compiler <https://gcc.gnu.org>`_
 * `GNU Make <https://www.gnu.org/software/make/>`_
 * `MPI <https://www.open-mpi.org>`_
-* `Simple Decomp Library <https://github.com/NaokiHori/SimpleDecomp>`_ (source files are included)
+* `Simple Decomp Library <https://github.com/NaokiHori/SimpleDecomp>`_ (included as a sub-module)
 
 ***********
 Quick start
@@ -55,8 +52,8 @@ Quick start
 
    .. code-block:: console
 
-      $ mkdir -p /path/to/your/directory
-      $ cd       /path/to/your/directory
+      mkdir -p /path/to/your/directory
+      cd       /path/to/your/directory
 
 #. Get source
 
@@ -64,24 +61,27 @@ Quick start
 
    .. code-block:: console
 
-      $ git clone --recurse-submodules https://github.com/NaokiHori/Contour3D
-      $ cd Contour3D
+      git clone --recurse-submodules https://github.com/NaokiHori/Contour3D
+      cd Contour3D
+
+   Do not forget to fetch the sub-module as well.
 
 #. Build
 
    .. code-block:: console
 
-      $ make clean
-      $ make all
+      make clean
+      make all
 
 #. Execute
 
    .. code-block:: console
 
-      $ mpirun -n 2 --oversubscribe ./a.out
+      mpirun -n 2 --oversubscribe ./a.out
 
    This may take a few seconds.
    Change the number of processes depending on your machine spec.
+
 #. Check output
 
    Find ``output.ppm``, which is the result of the 3D contouring:

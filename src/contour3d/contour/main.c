@@ -8,7 +8,7 @@
 int contour3d_process_contour_obj(
     const sdecomp_info_t * sdecomp_info,
     const camera_t * camera,
-    const vector_t * light,
+    const contour3d_vector_t * light,
     const screen_t * screen,
     const contour3d_contour_obj_t * contour_obj,
     pixel_t * canvas

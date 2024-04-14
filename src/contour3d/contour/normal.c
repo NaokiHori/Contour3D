@@ -8,7 +8,7 @@
 static inline int average(
     const lattice_t * lattice,
     const size_t cube_index,
-    vector_t * normal_sum
+    contour3d_vector_t * normal_sum
 ){
   // check three vertices of the triangles inside the given lattice
   // if one of the vertices matches with the "cube_index",
@@ -59,7 +59,7 @@ int contour3d_contour_compute_vertex_normals(
           // this vertex sits on this cube edge:
           const size_t cube_index = triangle->cube_indices[m];
           // this is to be updated
-          vector_t * vertex_normal = &triangle->vertex_normals[m];
+          contour3d_vector_t * vertex_normal = &triangle->vertex_normals[m];
           (*vertex_normal)[0] = 0.;
           (*vertex_normal)[1] = 0.;
           (*vertex_normal)[2] = 0.;

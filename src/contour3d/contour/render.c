@@ -21,7 +21,7 @@ static inline int_fast32_t intmax(const int_fast32_t v0, const int_fast32_t v1){
   return v0 > v1 ? v0 : v1;
 }
 
-static double edge_function(const vector_t * v0, const vector_t * v1, const vector_t * v2){
+static double edge_function(const contour3d_vector_t * v0, const contour3d_vector_t * v1, const contour3d_vector_t * v2){
   return
     + ((*v2)[0] - (*v0)[0]) * ((*v1)[1] - (*v0)[1])
     - ((*v2)[1] - (*v0)[1]) * ((*v1)[0] - (*v0)[0]);
@@ -29,7 +29,7 @@ static double edge_function(const vector_t * v0, const vector_t * v1, const vect
 
 int contour3d_contour_render_triangle(
     const camera_t * camera,
-    const vector_t * light,
+    const contour3d_vector_t * light,
     const screen_t * screen,
     const uint8_t fg_color[3],
     const triangle_t * triangle,
@@ -53,9 +53,9 @@ int contour3d_contour_render_triangle(
   // the vector components are on the screen coordinate (2D),
   //   while the z element is used to store the depth,
   //   which will be used to compare / update the z-buffer
-  const vector_t * v0 = projected.vertices + 0;
-  const vector_t * v1 = projected.vertices + 1;
-  const vector_t * v2 = projected.vertices + 2;
+  const contour3d_vector_t * v0 = projected.vertices + 0;
+  const contour3d_vector_t * v1 = projected.vertices + 1;
+  const contour3d_vector_t * v2 = projected.vertices + 2;
   // prepare bounding box
   const int_fast32_t xmin = (0.5 + dblmin3((*v0)[0], (*v1)[0], (*v2)[0])) * width  - 1;
   const int_fast32_t xmax = (0.5 + dblmax3((*v0)[0], (*v1)[0], (*v2)[0])) * width  + 1;
@@ -70,7 +70,7 @@ int contour3d_contour_render_triangle(
   for(size_t j = jmin; j <= jmax; j++){
     for(size_t i = imin; i <= imax; i++){
       // target point inside the bounding box (on screen coordinate[-0.5:+0.5])
-      const vector_t v3 = {
+      const contour3d_vector_t v3 = {
         1. * (i + 0.5) / width  - 0.5,
         1. * (j + 0.5) / height - 0.5,
         0., // not used
@@ -108,8 +108,8 @@ int contour3d_contour_render_triangle(
       //   the angle between the normal vector and the light
       // first obtain the local face normal
       //   by averaging three vertex normals on the barycentric coordinate
-      const vector_t * vertex_normals = triangle->vertex_normals;
-      vector_t face_normal = {
+      const contour3d_vector_t * vertex_normals = triangle->vertex_normals;
+      contour3d_vector_t face_normal = {
         + w0 * vertex_normals[0][0] + w1 * vertex_normals[1][0] + w2 * vertex_normals[2][0],
         + w0 * vertex_normals[0][1] + w1 * vertex_normals[1][1] + w2 * vertex_normals[2][1],
         + w0 * vertex_normals[0][2] + w1 * vertex_normals[1][2] + w2 * vertex_normals[2][2],

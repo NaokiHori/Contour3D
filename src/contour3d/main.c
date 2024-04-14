@@ -22,8 +22,7 @@ int contour3d_execute(
     const uint8_t bg_color[3],
     const size_t num_contours,
     const contour3d_contour_obj_t contour3d_contour_objs[],
-    const size_t num_lines,
-    const contour3d_line_obj_t contour3d_line_objs[],
+    const contour3d_line_obj_t * contour3d_line_objs,
     const char fname[]
 ){
   // prepare structures
@@ -35,7 +34,7 @@ int contour3d_execute(
     .look_at[1]  = camera_look_at[1],
     .look_at[2]  = camera_look_at[2],
   };
-  vector_t light = {0};
+  contour3d_vector_t light = {0};
   {
     const double norminv = 1. / sqrt(
         + pow(light_direction[0], 2.)
@@ -129,15 +128,13 @@ int contour3d_execute(
           canvas
     )) goto abort;
   }
-  // process line objects
-  for(/* each line object */ size_t index = 0; index < num_lines; index++){
-    if(0 != contour3d_process_line_obj(
-          &camera,
-          &screen,
-          contour3d_line_objs + index,
-          canvas
-    )) goto abort;
-  }
+  // draw domain boundaries (edges)
+  if(0 != contour3d_process_line_obj(
+        &camera,
+        &screen,
+        contour3d_line_objs,
+        canvas
+  )) goto abort;
   if(0 != contour3d_output_image(
         sdecomp_info,
         fname,

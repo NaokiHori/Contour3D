@@ -9,14 +9,14 @@
 int contour3d_project(
     const camera_t * camera,
     const screen_t * screen,
-    const vector_t * p0,
-    vector_t * p1
+    const contour3d_vector_t * p0,
+    contour3d_vector_t * p1
 ){
   // vector from the camera to the given point
   // note that an arbitrary point on this line
   //   can be represented as "camera + t * ray",
   //   where "t" is a parameter
-  const vector_t ray = {
+  const contour3d_vector_t ray = {
     + (*p0)[0] - camera->position[0],
     + (*p0)[1] - camera->position[1],
     + (*p0)[2] - camera->position[2],
@@ -39,7 +39,7 @@ int contour3d_project(
   if(0. >= t) return 1;
   if(1. <= t) return 1;
   // find a vector from the screen center to the intersection on the screen
-  const vector_t delta = {
+  const contour3d_vector_t delta = {
       + camera->position[0] + t * ray[0] - screen->center[0],
       + camera->position[1] + t * ray[1] - screen->center[1],
       + camera->position[2] + t * ray[2] - screen->center[2],

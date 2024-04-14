@@ -23,7 +23,7 @@ static const size_t edge_table[8][8] = {
 };
 
 typedef struct {
-  vector_t position;
+  contour3d_vector_t position;
   double value;
   size_t cube_index;
 } vertex_t;
@@ -32,10 +32,10 @@ static int interpolate(
     const double vt,
     const vertex_t * vertex0,
     const vertex_t * vertex1,
-    vector_t * pt
+    contour3d_vector_t * pt
 ){
-  const vector_t * p0 = &vertex0->position;
-  const vector_t * p1 = &vertex1->position;
+  const contour3d_vector_t * p0 = &vertex0->position;
+  const contour3d_vector_t * p1 = &vertex1->position;
   const double v0 = vertex0->value;
   const double v1 = vertex1->value;
   const double small = 1.e-8;
@@ -58,17 +58,17 @@ static int interpolate(
 static int compute_face_normal(
     triangle_t * triangle
 ){
-  const vector_t * vertex0 = &triangle->vertices[0];
-  const vector_t * vertex1 = &triangle->vertices[1];
-  const vector_t * vertex2 = &triangle->vertices[2];
-  vector_t * face_normal = &triangle->face_normal;
+  const contour3d_vector_t * vertex0 = &triangle->vertices[0];
+  const contour3d_vector_t * vertex1 = &triangle->vertices[1];
+  const contour3d_vector_t * vertex2 = &triangle->vertices[2];
+  contour3d_vector_t * face_normal = &triangle->face_normal;
   // find face normal using the cross product
-  const vector_t v01 = {
+  const contour3d_vector_t v01 = {
     + (*vertex1)[0] - (*vertex0)[0],
     + (*vertex1)[1] - (*vertex0)[1],
     + (*vertex1)[2] - (*vertex0)[2],
   };
-  const vector_t v02 = {
+  const contour3d_vector_t v02 = {
     + (*vertex2)[0] - (*vertex0)[0],
     + (*vertex2)[1] - (*vertex0)[1],
     + (*vertex2)[2] - (*vertex0)[2],
@@ -131,7 +131,7 @@ static int kernel(
 
 static int triangulate_tetrahedron(
     const double grids[3][2],
-    int (* const coordinate_converter)(const double [3], double [3]),
+    int (* const coordinate_converter)(const contour3d_vector_t * orthogonal, contour3d_vector_t * cartesian),
     const double * array,
     const double threshold,
     const size_t tetrahedron_index,
@@ -162,22 +162,15 @@ static int triangulate_tetrahedron(
     const size_t j = (0 == cube_index || 1 == cube_index || 4 == cube_index || 5 == cube_index) ? 0 : 1;
     const size_t k = (0 == cube_index || 1 == cube_index || 2 == cube_index || 3 == cube_index) ? 0 : 1;
     // convert from a general to the cartesian coordinate systems
-    if(NULL == coordinate_converter){
-      // if the converter is not specified, assume the cartesian
-      tetrahedron[n].position[0] = grids[0][i];
-      tetrahedron[n].position[1] = grids[1][j];
-      tetrahedron[n].position[2] = grids[2][k];
-    }else{
-      // if given, map the given coordinate to the cartesian coordinate
-      coordinate_converter(
-          (const double [3]){
-            grids[0][i],
-            grids[1][j],
-            grids[2][k],
-          },
-          tetrahedron[n].position
-      );
-    }
+    const contour3d_vector_t cartesian = {
+      grids[0][i],
+      grids[1][j],
+      grids[2][k],
+    };
+    coordinate_converter(
+        &cartesian,
+        &tetrahedron[n].position
+    );
     tetrahedron[n].cube_index = cube_index;
     tetrahedron[n].value = array[k * 4 + j * 2 + i];
   }
@@ -296,14 +289,14 @@ static inline size_t ravel(
   return (k * glsizes[1] + j) * glsizes[0] + i;
 }
 
-int contour3d_contour_triangulate_slice(
+int contour3d_contour_triangulate_slice (
     const size_t glsizes[2],
     double * const grids[3],
-    int (* const coordinate_converter)(const double [3], double [3]),
+    int (* const coordinate_converter)(const contour3d_vector_t * orthogonal, contour3d_vector_t * cartesian),
     const double * array,
     const double threshold,
     lattice_t * lattices
-){
+) {
   const size_t imax = glsizes[0] - 1;
   const size_t jmax = glsizes[1] - 1;
   for(/* each y */ size_t j = 0; j < jmax; j++){

@@ -7,6 +7,16 @@
 
 static const double pi = 3.1415926535897932;
 
+static int converter(
+    const contour3d_vector_t * orthogonal,
+    contour3d_vector_t * cartesian
+) {
+  (*cartesian)[0] = (*orthogonal)[0];
+  (*cartesian)[1] = (*orthogonal)[1];
+  (*cartesian)[2] = (*orthogonal)[2];
+  return 0;
+}
+
 static int rodrigues(const double n[3], const double t, double b[3]){
   // Rodrigues' rotation formula:
   //   rotate a vector "b" by the angle "t" (in radian) around a vector "n"
@@ -82,7 +92,7 @@ static int init_field(const sdecomp_info_t * sdecomp_info, const sdecomp_pencil_
   glsizes[2] = 128;
   // domain lengths
   const double lengths[3] = {1., 1., 1., };
-  // rectilinear grids in three directions
+  // orthogonal grids in three directions
   grids[0] = calloc(glsizes[0], sizeof(double));
   grids[1] = calloc(glsizes[1], sizeof(double));
   grids[2] = calloc(glsizes[2], sizeof(double));
@@ -201,7 +211,7 @@ int main(void){
   // initialise sample data to be visualised
   // number of total grid points (assigned later)
   size_t glsizes[3] = {0, 0, 0};
-  // rectilinear grids in three directions (assigned later)
+  // orthogonal grids in three directions (assigned later)
   // define array on x1pencil
   const sdecomp_pencil_t pencil = SDECOMP_X1PENCIL;
   // see also: convert_coordinate
@@ -224,7 +234,7 @@ int main(void){
   contour_objs[0].grids[0]   = grids[0];
   contour_objs[0].grids[1]   = grids[1];
   contour_objs[0].grids[2]   = grids[2];
-  contour_objs[0].converter  = NULL;
+  contour_objs[0].converter  = converter;
   contour_objs[0].threshold  = -0.25;
   contour_objs[0].color[0]   = 0x00;
   contour_objs[0].color[1]   = 0xFF;
@@ -238,7 +248,7 @@ int main(void){
   contour_objs[1].grids[0]   = grids[0];
   contour_objs[1].grids[1]   = grids[1];
   contour_objs[1].grids[2]   = grids[2];
-  contour_objs[1].converter  = NULL;
+  contour_objs[1].converter  = converter;
   contour_objs[1].threshold  = +0.25;
   contour_objs[1].color[0]   = 0xFF;
   contour_objs[1].color[1]   = 0xFF;
@@ -247,38 +257,25 @@ int main(void){
   // lines, which are used to draw domain edges
   // in this example draw edges of the external cube
   // see also: include/contour3d.h
-  const size_t num_lines = 12;
-  contour3d_line_obj_t line_objs[12] = {0};
-  for(size_t cnt = 0, j = 0; j < 8; j++){
-    const double x1 = 0 == j % 2               ? -0.5 : +0.5;
-    const double y1 = 2 == j % 4 || 3 == j % 4 ? -0.5 : +0.5;
-    const double z1 = j < 4                    ? -0.5 : +0.5;
-    for(size_t i = j + 1; i < 8; i++){
-      const double x0 = 0 == i % 2               ? -0.5 : +0.5;
-      const double y0 = 2 == i % 4 || 3 == i % 4 ? -0.5 : +0.5;
-      const double z0 = i < 4                    ? -0.5 : +0.5;
-      size_t difcnt = 0;
-      if(x0 != x1) difcnt++;
-      if(y0 != y1) difcnt++;
-      if(z0 != z1) difcnt++;
-      if(1 != difcnt) continue;
-      line_objs[cnt].nitems   = 2;
-      line_objs[cnt].grids[0] = calloc(2, sizeof(double));
-      line_objs[cnt].grids[1] = calloc(2, sizeof(double));
-      line_objs[cnt].grids[2] = calloc(2, sizeof(double));
-      line_objs[cnt].grids[0][0] = x0;
-      line_objs[cnt].grids[0][1] = x1;
-      line_objs[cnt].grids[1][0] = y0;
-      line_objs[cnt].grids[1][1] = y1;
-      line_objs[cnt].grids[2][0] = z0;
-      line_objs[cnt].grids[2][1] = z1;
-      line_objs[cnt].color[0] = 0xFF;
-      line_objs[cnt].color[1] = 0xFF;
-      line_objs[cnt].color[2] = 0xFF;
-      line_objs[cnt].width    = 2.;
-      cnt++;
-    }
-  }
+  const contour3d_line_obj_t line_objs = {
+    .line_configs = {
+      {
+        .edges = {-0.5, +0.5},
+        .nitems = glsizes[0],
+      },
+      {
+        .edges = {-0.5, +0.5},
+        .nitems = glsizes[1],
+      },
+      {
+        .edges = {-0.5, +0.5},
+        .nitems = glsizes[2],
+      },
+    },
+    .converter = converter,
+    .color = {0xFF, 0xFF, 0xFF},
+    .width = 2.,
+  };
   // draw 3d contour and output an image
   // see also: include/contour3d.h
   if(0 != contour3d_execute(
@@ -292,8 +289,7 @@ int main(void){
         bg_color,
         num_contours,
         contour_objs,
-        num_lines,
-        line_objs,
+        &line_objs,
         "output.ppm"
   )){
     printf("contour3d failed\n");
@@ -303,11 +299,6 @@ int main(void){
   free(grids[1]);
   free(grids[2]);
   free(array);
-  for(size_t index = 0; index < num_lines; index++){
-    free(line_objs[index].grids[0]);
-    free(line_objs[index].grids[1]);
-    free(line_objs[index].grids[2]);
-  }
   sdecomp.destruct(sdecomp_info);
   MPI_Finalize();
   return 0;

@@ -4,23 +4,21 @@
 #include <stddef.h> // size_t
 #include <stdint.h> // uint8_t
 #include "sdecomp.h"
+#include "contour3d.h"
 
 // simple include guard
 #if !defined(CONTOUR3D_INTERNAL)
 #error "do not include this file externally"
 #endif
 
-// 3D Cartesian coordinate
-typedef double vector_t[3];
-
 // triangle element which is rendered
 typedef struct {
   // vertex positions
-  vector_t vertices[3];
+  contour3d_vector_t vertices[3];
   // face normal (single vector per element)
-  vector_t face_normal;
+  contour3d_vector_t face_normal;
   // vertex normals (defined at each vertex)
-  vector_t vertex_normals[3];
+  contour3d_vector_t vertex_normals[3];
   // indices of the lattice edges where the corners are sitting
   size_t cube_indices[3];
   // area of triangle
@@ -43,20 +41,20 @@ typedef struct {
 // screen configuration
 typedef struct {
   // center position
-  vector_t center;
+  contour3d_vector_t center;
   // number of pixels
   size_t width;
   size_t height;
   // horizontal and vertical vectors of the screen horizontal and vertical axes
-  vector_t local_x;
-  vector_t local_y;
+  contour3d_vector_t local_x;
+  contour3d_vector_t local_y;
   // the above vectors are NOT normalised and
   //   their l2 norms represent the lengths of the screen
   // inversed and squared values are stored for convenience
   double ipinv_local_x;
   double ipinv_local_y;
   // normal vector perpendicular to the screen
-  vector_t normal;
+  contour3d_vector_t normal;
   // intercept ("d" of n_x x_c + n_y y_c + n_z z_c = d),
   //   where n_i is the screen normal and i_c is the screen center
   double intercept;
@@ -64,9 +62,9 @@ typedef struct {
 
 typedef struct {
   // where the observer is sitting
-  vector_t position;
+  contour3d_vector_t position;
   // where the observer is looking at
-  vector_t look_at;
+  contour3d_vector_t look_at;
 } camera_t;
 
 extern void * contour3d_calloc(
@@ -85,8 +83,8 @@ extern int contour3d_free_all(
 extern int contour3d_project(
     const camera_t * camera,
     const screen_t * screen,
-    const vector_t * p0,
-    vector_t * p1
+    const contour3d_vector_t * p0,
+    contour3d_vector_t * p1
 );
 
 extern int contour3d_output_image(

@@ -5,6 +5,9 @@
 #include <stdint.h> // uint8_t
 #include "sdecomp.h"
 
+// (x, y, z)
+typedef double contour3d_vector_t[3];
+
 typedef struct {
   // pencil on which the array is defined
   // see also: https://github.com/NaokiHori/SimpleDecomp
@@ -13,9 +16,8 @@ typedef struct {
   size_t glsizes[3];
   // rectilinear grids in each XYZ
   double * grids[3];
-  // pointer to a function which maps the given grids (XYZ) to the Cartesian coordinate (xyz)
-  // NOTE: NULL can be passed assuming the same Cartesian coordinate
-  int (* converter)(const double coords[3], double xyz[3]);
+  // pointer to a function which maps the given orthogonal coordinate to the Cartesian coordinate
+  int (* converter)(const contour3d_vector_t * orthogonal, contour3d_vector_t * cartesian);
   // where the iso-surface is formed
   double threshold;
   // object color (rgb)
@@ -25,11 +27,19 @@ typedef struct {
 } contour3d_contour_obj_t;
 
 typedef struct {
-  // number of points
-  size_t nitems;
-  // points
-  double * grids[3];
-  // object color (rgb)
+  // specify edges in each direction
+  struct {
+    // start and end, on the user-defined orthogonal coordinate system
+    double edges[2];
+    // number of intermediate points (the more the smoother)
+    size_t nitems;
+  } line_configs[3];
+  // pointer to a function which maps the given orthogonal coordinate to the Cartesian coordinate
+  int (* converter)(
+      const contour3d_vector_t * orthogonal,
+      contour3d_vector_t * cartesian
+  );
+  // line color (rgb)
   uint8_t color[3];
   // line width
   double width;
@@ -57,11 +67,8 @@ extern int contour3d_execute(
     // details of the iso-surfaces, which should have "num_contours" members
     // see above, the definition of "contour3d_contour_obj_t"
     const contour3d_contour_obj_t contour3d_contour_objs[],
-    // number of lines to be drawn
-    const size_t num_lines,
-    // details of the lines, which should have "num_lines" members
-    // see above, the definition of "contour3d_line_obj_t"
-    const contour3d_line_obj_t contour3d_line_objs[],
+    // details of the lines (12 domain edges)
+    const contour3d_line_obj_t * contour3d_line_objs,
     // output image file name
     const char fname[]
 );
