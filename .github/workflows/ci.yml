@@ -1,7 +1,6 @@
 name: CI
 
 on:
-
   push:
     branches:
       - main
@@ -11,7 +10,6 @@ on:
       - SimpleDecomp/**
 
 jobs:
-
   build-and-run:
     name: Build and execute
     runs-on: ubuntu-latest
@@ -57,4 +55,3 @@ jobs:
           git add output.jpg
           git commit -m "Update image" -a || true
           git push -f origin artifact
-

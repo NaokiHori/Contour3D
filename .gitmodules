@@ -1,4 +1,0 @@
-[submodule "SimpleDecomp"]
-	path = SimpleDecomp
-	url = https://github.com/NaokiHori/SimpleDecomp
-	branch = submodule
