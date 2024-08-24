@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta
+      name="description"
+      content="A web application to adjust screen and camera interactively, designed for my Contour3D library"
+    />
+    <link rel="stylesheet" href="/style/main.css" />
+    <title>Camera Adjuster</title>
+  </head>
+
+  <body id="body">
+    <h1 id="header">
+      <button id="menu-go-to-left">&lt;-</button>
+      Camera Adjuster
+      <button id="menu-go-to-right">-&gt;</button>
+    </h1>
+
+    <div id="menu">
+      <div id="screen-size" class="input-container" style="display: none">
+        <div class="input-text">
+          <label for="screen-width">Screen width</label>
+          <input id="screen-width" type="text" value="1" />
+        </div>
+        <div class="input-text">
+          <label for="screen-height">Screen height</label>
+          <input id="screen-height" type="text" value="0.75" />
+        </div>
+      </div>
+
+      <div id="distance" class="input-container" style="display: none">
+        <div class="input-text">
+          <label for="focal-screen-distance">Focal-screen distance</label>
+          <input id="focal-screen-distance" type="text" value="2" />
+        </div>
+        <div class="input-text">
+          <label for="focal-camera-distance">Focal-camera distance</label>
+          <input id="focal-camera-distance" type="text" value="3" />
+        </div>
+      </div>
+
+      <div id="box-size" class="input-container" style="display: none">
+        <div class="input-text">
+          <label for="box-size-x">Box size (x)</label>
+          <input id="box-size-x" type="text" value="1" />
+        </div>
+        <div class="input-text">
+          <label for="box-size-y">Box size (y)</label>
+          <input id="box-size-y" type="text" value="1" />
+        </div>
+        <div class="input-text">
+          <label for="box-size-z">Box size (z)</label>
+          <input id="box-size-z" type="text" value="1" />
+        </div>
+      </div>
+
+      <div id="angle" class="input-container" style="display: flex">
+        <div class="input-range">
+          <label id="elevation-label" for="elevation-input"></label>
+          <input
+            id="elevation-input"
+            type="range"
+            min="-180"
+            max="179"
+            step="1"
+            value="60"
+          />
+        </div>
+        <div class="input-range">
+          <label id="azimuth-label" for="azimuth-input"></label>
+          <input
+            id="azimuth-input"
+            type="range"
+            min="-180"
+            max="179"
+            step="1"
+            value="30"
+          />
+        </div>
+        <div class="input-range">
+          <label id="roll-label" for="roll-input"></label>
+          <input
+            id="roll-input"
+            type="range"
+            min="-180"
+            max="179"
+            step="1"
+            value="0"
+          />
+        </div>
+      </div>
+    </div>
+
+    <canvas id="main-canvas"> Cannot use canvas element </canvas>
+
+    <footer>
+      <a href="https://github.com/NaokiHori/Contour3D">
+        &copy; 2024, Naoki Hori
+      </a>
+    </footer>
+
+    <dialog id="code-modal">
+      <button id="code-modal-close-button">Close</button>
+      <div class="input-text">
+        <div>Pixels per unit length</div>
+        <input id="pixels-per-unit-length" type="text" value="1440" />
+      </div>
+      <div id="code-space"></div>
+    </dialog>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

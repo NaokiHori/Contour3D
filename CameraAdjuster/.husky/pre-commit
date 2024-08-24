@@ -1,0 +1,2 @@
+cd CameraAdjuster
+npx lint-staged

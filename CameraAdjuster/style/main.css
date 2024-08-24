@@ -1,0 +1,57 @@
+@import "./canvas.css";
+@import "./input.css";
+@import "./modal.css";
+
+body {
+  /* white texts on black background by default */
+  background-color: #000000;
+  color: #ffffff;
+  /* overall size */
+  width: 95vw;
+  height: 100vh;
+  /* center horizontally */
+  margin-left: auto;
+  margin-right: auto;
+  /* no margin at top and bottom */
+  margin-top: 0;
+  margin-bottom: 0;
+  /* make this a flex box such that canvas container fills the remaining space */
+  display: flex;
+  flex-flow: column;
+}
+
+h1 {
+  margin-block-start: 0.2em;
+  margin-block-end: 0.2em;
+  text-align: center;
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+  align-items: center;
+  column-gap: 10px;
+}
+
+h1 > button {
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: 2rem;
+}
+
+#menu {
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: auto;
+}
+
+footer {
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: auto;
+  width: 100%;
+  text-align: center;
+}
+
+footer > a {
+  color: #ffffff;
+  font-size: small;
+}

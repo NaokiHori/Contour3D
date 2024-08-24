@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/github/license/NaokiHori/Contour3D)](https://opensource.org/license/MIT)
 [![LastCommit](https://img.shields.io/github/last-commit/NaokiHori/Contour3D/main)](https://github.com/NaokiHori/Contour3D/commits/main)
 
-[![Thumbnail](https://github.com/NaokiHori/Contour3D/blob/main/thumbnail.jpg)](https://youtu.be/CbF5Bs9Jf30)
+[![Thumbnail](https://github.com/NaokiHori/Contour3D/blob/main/thumbnail.jpg)](https://naokihori.github.io/Contour3D/index.html)
 
 ## Overview
 
@@ -19,6 +19,11 @@ This library does not have any additional dependencies on `X`, `Qt`, `VTK`, `Ope
 
 The motivation for this project is to visualize the (flow) fields quickly and intuitively without the support of graphical libraries.
 For beautiful and comprehensive renderings, use other software options that offer more features.
+
+## Camera and Screen Configurations
+
+Finding the optimal positions and orientations for the screen and camera can often be challenging.
+To address this, I offer [a simple web application](https://naokihori.github.io/Contour3D/index.html) that allows you to adjust these parameters interactively.
 
 ## Dependencies
 

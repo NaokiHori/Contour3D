@@ -1,0 +1,52 @@
+div.input-container {
+  width: 100%;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: center;
+  align-items: stretch;
+  row-gap: 5px;
+  column-gap: 5px;
+}
+
+div.input-text,
+div.input-range {
+  flex-grow: 1;
+  flex-shrink: 1;
+  background-color: #ffffff;
+  color: #000000;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  min-height: 3rem;
+  font-family: "Courier New", monospace;
+  font-size: medium;
+}
+
+div.input-text > label,
+div.input-range > label {
+  display: block;
+}
+
+div.input-text > input[type="text"],
+div.input-range > input[type="range"] {
+  display: block;
+  width: 100%;
+  font-family: "Courier New", monospace;
+  box-sizing: border-box;
+  font-size: medium;
+}
+div.input-text > input[type="text"].valid-value {
+  background-color: #a9ceec;
+}
+div.input-text > input[type="text"].invalid-value {
+  background-color: #eca9a9;
+}
+
+div.input-range > input[type="range"] {
+  cursor: pointer;
+}

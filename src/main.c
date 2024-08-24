@@ -20,92 +20,6 @@ static contour3d_vector_t converter (
   return cartesian;
 }
 
-static int rodrigues (
-    const contour3d_vector_t * const n,
-    const double t,
-    contour3d_vector_t * const b
-) {
-  // Rodrigues' rotation formula:
-  //   rotate a vector "b" by the angle "t" (in radian) around a vector "n"
-  // since the length of the rotation vector may not be unity,
-  //   I normalise it first
-  const double norminv = 1. / sqrt(
-      + pow(n->x, 2.)
-      + pow(n->y, 2.)
-      + pow(n->z, 2.)
-  );
-  const contour3d_vector_t ntmp = {
-    .x = n->x * norminv,
-    .y = n->y * norminv,
-    .z = n->z * norminv,
-  };
-  // prepare 3x3 rotation matrix
-  const double cost = cos(t);
-  const double sint = sin(t);
-  const double a00 = ntmp.x * ntmp.x * (1. - cost) +          cost;
-  const double a01 = ntmp.x * ntmp.y * (1. - cost) - ntmp.z * sint;
-  const double a02 = ntmp.x * ntmp.z * (1. - cost) + ntmp.y * sint;
-  const double a10 = ntmp.y * ntmp.x * (1. - cost) + ntmp.z * sint;
-  const double a11 = ntmp.y * ntmp.y * (1. - cost) +          cost;
-  const double a12 = ntmp.y * ntmp.z * (1. - cost) - ntmp.x * sint;
-  const double a20 = ntmp.z * ntmp.x * (1. - cost) - ntmp.y * sint;
-  const double a21 = ntmp.z * ntmp.y * (1. - cost) + ntmp.x * sint;
-  const double a22 = ntmp.z * ntmp.z * (1. - cost) +          cost;
-  const contour3d_vector_t btmp = {
-    .x = + a00 * b->x + a01 * b->y + a02 * b->z,
-    .y = + a10 * b->x + a11 * b->y + a12 * b->z,
-    .z = + a20 * b->x + a21 * b->y + a22 * b->z,
-  };
-  b->x = btmp.x;
-  b->y = btmp.y;
-  b->z = btmp.z;
-  return 0;
-}
-
-static int configure_screen (
-    contour3d_vector_t * screen_center,
-    contour3d_vector_t (* screen_local)[2]
-) {
-  // check orthogonality of the screen basis vectors
-  {
-    const double dot =
-      + (*screen_local)[0].x * (*screen_local)[1].x
-      + (*screen_local)[0].y * (*screen_local)[1].y
-      + (*screen_local)[0].z * (*screen_local)[1].z;
-    if (1.e-8 < fabs(dot)) {
-      printf("screen horizontal and vertical vectors are not orthogonal (inner product: % .1e)\n", dot);
-      return 1;
-    }
-  }
-  // translate in the z direction
-  screen_center->z += 7.5;
-  // rotate around the z axis
-  const double angle0 = pi / 6.;
-  {
-    const contour3d_vector_t rot = {
-      .x = 0.,
-      .y = 0.,
-      .z = 1.,
-    };
-    rodrigues(&rot, angle0, screen_center);
-    rodrigues(&rot, angle0, *screen_local + 0);
-    rodrigues(&rot, angle0, *screen_local + 1);
-  }
-  // rotate around another vector
-  const double angle1 = 5. * pi / 12.;
-  {
-    const contour3d_vector_t rot = {
-      .x = cos(angle0),
-      .y = sin(angle0),
-      .z = 0.,
-    };
-    rodrigues(&rot, angle1, screen_center);
-    rodrigues(&rot, angle1, *screen_local + 0);
-    rodrigues(&rot, angle1, *screen_local + 1);
-  }
-  return 0;
-}
-
 static int init_field (
     const sdecomp_info_t * const sdecomp_info,
     const sdecomp_pencil_t pencil,
@@ -209,28 +123,37 @@ int main (
         (bool [3]) {true, true, true},
         &sdecomp_info
   )) return 1;
-  // screen size (physical length and resolution: number of pixels)
-  // NOTE: aspect ratio should be consistent
-  const double screen_lengths[2] = {1.6, 1.2};
-  const size_t screen_sizes[2] = {1440, 1080};
-  // focal point
-  const contour3d_vector_t camera_look_at = {.x = 0., .y = 0., .z = 0.};
-  // screen position and direction of local basis vectors
-  // anyway put at the focal point on the xy plane
-  contour3d_vector_t screen_center = camera_look_at;
-  contour3d_vector_t screen_local[2] = {
-    /* local x basis */ {screen_lengths[0],                0.,  0.},
-    /* local y basis */ {               0., screen_lengths[1],  0.},
-  };
-  // move screen and adjust the position and rotation manually and nicely
-  if (0 != configure_screen(&screen_center, &screen_local)) return 1;
-  // put camera on the line connecting the screen center and the focal point
-  // 0: focal, 1: screen center, and thus the factor should be larger than 1
-  const double factor = 5.;
+  // camera and screen configurations
   const contour3d_vector_t camera_position = {
-    .x = camera_look_at.x + (screen_center.x - camera_look_at.x) * factor,
-    .y = camera_look_at.y + (screen_center.y - camera_look_at.y) * factor,
-    .z = camera_look_at.z + (screen_center.z - camera_look_at.z) * factor,
+    .x = +8.660254037844386e-1,
+    .y = -1.500000000000000e+0,
+    .z = +1.000000000000000e+0,
+  };
+  const contour3d_vector_t camera_look_at = {
+    .x = +0.000000000000000e+0,
+    .y = +0.000000000000000e+0,
+    .z = +0.000000000000000e+0,
+  };
+  const size_t screen_sizes[2] = {
+    1440,
+    1080,
+  };
+  const contour3d_vector_t screen_center = {
+    .x = +4.330127018922194e-1,
+    .y = -7.500000000000003e-1,
+    .z = +5.000000000000003e-1,
+  };
+  const contour3d_vector_t screen_local[2] = {
+    {
+      .x = +1.154700538379251e+0,
+      .y = +6.666666666666665e-1,
+      .z = +0.000000000000000e+0,
+    },
+    {
+      .x = -2.500000000000000e-1,
+      .y = +4.330127018922195e-1,
+      .z = +8.660254037844386e-1,
+    },
   };
   // light
   const contour3d_vector_t light_direction = {

@@ -1,0 +1,48 @@
+name: WebApp
+
+on:
+
+  push:
+    branches:
+      - main
+    paths:
+      - CameraAdjuster/**
+
+jobs:
+
+  build-and-deploy:
+    name: Build and deploy application
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    concurrency:
+      group: "pages"
+      cancel-in-progress: true
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@main
+      - name: Setup node
+        uses: actions/setup-node@main
+      - name: Install dependencies
+        run: |
+          cd CameraAdjuster
+          npm install
+      - name: Build
+        run: |
+          cd CameraAdjuster
+          npm run build-prod
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@main
+      - name: Upload HTML
+        uses: actions/upload-pages-artifact@main
+        with:
+          path: CameraAdjuster/dist
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@main
+
