@@ -1,4 +1,6 @@
+import { config } from "../config";
 import { getElementByIdUnwrap } from "./getElement";
+import { syncCanvasSize, updateCanvas } from "./canvas";
 
 const menuItems = [
   getElementByIdUnwrap("screen-size") as HTMLDivElement,
@@ -19,11 +21,15 @@ function updateMenuItem() {
 function goToLeft() {
   selectedIndex = (selectedIndex + numberOfItems - 1) % numberOfItems;
   updateMenuItem();
+  syncCanvasSize();
+  updateCanvas(config);
 }
 
 function goToRight() {
   selectedIndex = (selectedIndex + numberOfItems + 1) % numberOfItems;
   updateMenuItem();
+  syncCanvasSize();
+  updateCanvas(config);
 }
 
 const buttons = {
