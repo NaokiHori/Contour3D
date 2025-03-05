@@ -2,11 +2,7 @@ name: WebApp
 
 on:
 
-  push:
-    branches:
-      - main
-    paths:
-      - CameraAdjuster/**
+  workflow_dispatch:
 
 jobs:
 
@@ -32,10 +28,14 @@ jobs:
         run: |
           cd CameraAdjuster
           npm install
+          cd ..
       - name: Build
         run: |
           cd CameraAdjuster
-          npm run build-prod
+          npx \
+            vite build \
+            --base=https://naokihori.github.io/Contour3D/
+          cd ..
       - name: Setup GitHub Pages
         uses: actions/configure-pages@main
       - name: Upload HTML
