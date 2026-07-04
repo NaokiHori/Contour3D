@@ -14,57 +14,57 @@ export function drawLineSegments(
   const width: number = imageData.width;
   const height: number = imageData.height;
   const color: Color = { r: 255, g: 255, b: 255, a: 255 };
-  const lineSegments: LineSegment[] = [
+  const lineSegments: Array<LineSegment> = [
     // in x
     {
       s: { x: -0.5 * boxSizes.x, y: -0.5 * boxSizes.y, z: -0.5 * boxSizes.z },
-      e: { x: +0.5 * boxSizes.x, y: -0.5 * boxSizes.y, z: -0.5 * boxSizes.z },
+      e: { x: 0.5 * boxSizes.x, y: -0.5 * boxSizes.y, z: -0.5 * boxSizes.z },
     },
     {
-      s: { x: -0.5 * boxSizes.x, y: +0.5 * boxSizes.y, z: -0.5 * boxSizes.z },
-      e: { x: +0.5 * boxSizes.x, y: +0.5 * boxSizes.y, z: -0.5 * boxSizes.z },
+      s: { x: -0.5 * boxSizes.x, y: 0.5 * boxSizes.y, z: -0.5 * boxSizes.z },
+      e: { x: 0.5 * boxSizes.x, y: 0.5 * boxSizes.y, z: -0.5 * boxSizes.z },
     },
     {
-      s: { x: -0.5 * boxSizes.x, y: -0.5 * boxSizes.y, z: +0.5 * boxSizes.z },
-      e: { x: +0.5 * boxSizes.x, y: -0.5 * boxSizes.y, z: +0.5 * boxSizes.z },
+      s: { x: -0.5 * boxSizes.x, y: -0.5 * boxSizes.y, z: 0.5 * boxSizes.z },
+      e: { x: 0.5 * boxSizes.x, y: -0.5 * boxSizes.y, z: 0.5 * boxSizes.z },
     },
     {
-      s: { x: -0.5 * boxSizes.x, y: +0.5 * boxSizes.y, z: +0.5 * boxSizes.z },
-      e: { x: +0.5 * boxSizes.x, y: +0.5 * boxSizes.y, z: +0.5 * boxSizes.z },
+      s: { x: -0.5 * boxSizes.x, y: 0.5 * boxSizes.y, z: 0.5 * boxSizes.z },
+      e: { x: 0.5 * boxSizes.x, y: 0.5 * boxSizes.y, z: 0.5 * boxSizes.z },
     },
     // in y
     {
       s: { x: -0.5 * boxSizes.x, y: -0.5 * boxSizes.y, z: -0.5 * boxSizes.z },
-      e: { x: -0.5 * boxSizes.x, y: +0.5 * boxSizes.y, z: -0.5 * boxSizes.z },
+      e: { x: -0.5 * boxSizes.x, y: 0.5 * boxSizes.y, z: -0.5 * boxSizes.z },
     },
     {
-      s: { x: +0.5 * boxSizes.x, y: -0.5 * boxSizes.y, z: -0.5 * boxSizes.z },
-      e: { x: +0.5 * boxSizes.x, y: +0.5 * boxSizes.y, z: -0.5 * boxSizes.z },
+      s: { x: 0.5 * boxSizes.x, y: -0.5 * boxSizes.y, z: -0.5 * boxSizes.z },
+      e: { x: 0.5 * boxSizes.x, y: 0.5 * boxSizes.y, z: -0.5 * boxSizes.z },
     },
     {
-      s: { x: -0.5 * boxSizes.x, y: -0.5 * boxSizes.y, z: +0.5 * boxSizes.z },
-      e: { x: -0.5 * boxSizes.x, y: +0.5 * boxSizes.y, z: +0.5 * boxSizes.z },
+      s: { x: -0.5 * boxSizes.x, y: -0.5 * boxSizes.y, z: 0.5 * boxSizes.z },
+      e: { x: -0.5 * boxSizes.x, y: 0.5 * boxSizes.y, z: 0.5 * boxSizes.z },
     },
     {
-      s: { x: +0.5 * boxSizes.x, y: -0.5 * boxSizes.y, z: +0.5 * boxSizes.z },
-      e: { x: +0.5 * boxSizes.x, y: +0.5 * boxSizes.y, z: +0.5 * boxSizes.z },
+      s: { x: 0.5 * boxSizes.x, y: -0.5 * boxSizes.y, z: 0.5 * boxSizes.z },
+      e: { x: 0.5 * boxSizes.x, y: 0.5 * boxSizes.y, z: 0.5 * boxSizes.z },
     },
     // in z
     {
       s: { x: -0.5 * boxSizes.x, y: -0.5 * boxSizes.y, z: -0.5 * boxSizes.z },
-      e: { x: -0.5 * boxSizes.x, y: -0.5 * boxSizes.y, z: +0.5 * boxSizes.z },
+      e: { x: -0.5 * boxSizes.x, y: -0.5 * boxSizes.y, z: 0.5 * boxSizes.z },
     },
     {
-      s: { x: +0.5 * boxSizes.x, y: -0.5 * boxSizes.y, z: -0.5 * boxSizes.z },
-      e: { x: +0.5 * boxSizes.x, y: -0.5 * boxSizes.y, z: +0.5 * boxSizes.z },
+      s: { x: 0.5 * boxSizes.x, y: -0.5 * boxSizes.y, z: -0.5 * boxSizes.z },
+      e: { x: 0.5 * boxSizes.x, y: -0.5 * boxSizes.y, z: 0.5 * boxSizes.z },
     },
     {
-      s: { x: -0.5 * boxSizes.x, y: +0.5 * boxSizes.y, z: -0.5 * boxSizes.z },
-      e: { x: -0.5 * boxSizes.x, y: +0.5 * boxSizes.y, z: +0.5 * boxSizes.z },
+      s: { x: -0.5 * boxSizes.x, y: 0.5 * boxSizes.y, z: -0.5 * boxSizes.z },
+      e: { x: -0.5 * boxSizes.x, y: 0.5 * boxSizes.y, z: 0.5 * boxSizes.z },
     },
     {
-      s: { x: +0.5 * boxSizes.x, y: +0.5 * boxSizes.y, z: -0.5 * boxSizes.z },
-      e: { x: +0.5 * boxSizes.x, y: +0.5 * boxSizes.y, z: +0.5 * boxSizes.z },
+      s: { x: 0.5 * boxSizes.x, y: 0.5 * boxSizes.y, z: -0.5 * boxSizes.z },
+      e: { x: 0.5 * boxSizes.x, y: 0.5 * boxSizes.y, z: 0.5 * boxSizes.z },
     },
   ];
   for (const lineSegment of lineSegments) {

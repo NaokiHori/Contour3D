@@ -1,0 +1,11 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: container_camera_adjuster
+    image: naokihori/camera_adjuster
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/project/src

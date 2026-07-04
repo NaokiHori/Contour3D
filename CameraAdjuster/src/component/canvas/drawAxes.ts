@@ -12,7 +12,7 @@ export function drawAxes(
 ) {
   const width: number = imageData.width;
   const height: number = imageData.height;
-  const axes: { lineSegment: LineSegment; color: Color }[] = [
+  const axes: Array<{ lineSegment: LineSegment; color: Color }> = [
     {
       lineSegment: {
         s: { x: 0, y: 0, z: 0 },
