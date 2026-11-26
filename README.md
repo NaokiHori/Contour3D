@@ -1,10 +1,6 @@
 # Contour 3D
 
-[![CI](https://github.com/NaokiHori/Contour3D/actions/workflows/ci.yml/badge.svg)](https://github.com/NaokiHori/Contour3D/actions/workflows/ci.yml)
-[![License](https://img.shields.io/github/license/NaokiHori/Contour3D)](https://opensource.org/license/MIT)
-[![LastCommit](https://img.shields.io/github/last-commit/NaokiHori/Contour3D/main)](https://github.com/NaokiHori/Contour3D/commits/main)
-
-[![Thumbnail](https://github.com/NaokiHori/Contour3D/blob/main/thumbnail.jpg)](https://naokihori.github.io/Contour3D/index.html)
+![Cover](https://github.com/NaokiHori/Contour3D/blob/main/cover.jpg)
 
 ## Overview
 
