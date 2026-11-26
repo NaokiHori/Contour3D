@@ -1,7 +1,13 @@
-export function getElementByIdUnwrap(id: string): HTMLElement {
-  const elem: HTMLElement | null = document.getElementById(id);
-  if (elem === null) {
-    throw new Error(`failed to get element: ${id}`);
+export function getElementByIdOrThrow<T extends Element>(
+  type: new (...args: unknown[]) => T,
+  id: string,
+): T {
+  const element = document.querySelector(`#${id}`);
+  if (null === element) {
+    throw new Error(`element not found: #${id}`);
   }
-  return elem;
+  if (!(element instanceof type)) {
+    throw new TypeError(`unexpected type of element: #${id}`);
+  }
+  return element;
 }

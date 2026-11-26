@@ -40,13 +40,10 @@ function project(
   return {
     x:
       (0.5 +
-        innerProduct(delta, screenHorizontal) /
-          innerProduct(screenHorizontal, screenHorizontal)) *
+        innerProduct(delta, screenHorizontal) / innerProduct(screenHorizontal, screenHorizontal)) *
       width,
     y:
-      (0.5 +
-        innerProduct(delta, screenVertical) /
-          innerProduct(screenVertical, screenVertical)) *
+      (0.5 + innerProduct(delta, screenVertical) / innerProduct(screenVertical, screenVertical)) *
       height,
     z: nr,
   };

@@ -18,10 +18,7 @@ function clipOutOfBounds(
   };
 }
 
-export function getBoundingBox(
-  canvas: HTMLCanvasElement,
-  screenAspectRatio: number,
-): BoundingBox {
+export function getBoundingBox(canvas: HTMLCanvasElement, screenAspectRatio: number): BoundingBox {
   const canvasWidth: number = canvas.width;
   const canvasHeight: number = canvas.height;
   const canvasAspectRatio: number = canvasWidth / canvasHeight;
@@ -33,12 +30,11 @@ export function getBoundingBox(
       jmin: Math.round(0),
       jmax: Math.round(canvasHeight - 1),
     } satisfies BoundingBox);
-  } else {
-    return clipOutOfBounds(canvasWidth, canvasHeight, {
-      imin: Math.round(0),
-      imax: Math.round(canvasWidth - 1),
-      jmin: Math.round(0),
-      jmax: Math.round(canvasWidth / screenAspectRatio),
-    } satisfies BoundingBox);
   }
+  return clipOutOfBounds(canvasWidth, canvasHeight, {
+    imin: Math.round(0),
+    imax: Math.round(canvasWidth - 1),
+    jmin: Math.round(0),
+    jmax: Math.round(canvasWidth / screenAspectRatio),
+  } satisfies BoundingBox);
 }

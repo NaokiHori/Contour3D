@@ -1,31 +1,31 @@
-import { getElementByIdUnwrap } from "./getElement";
-import {
-  classNameValidInput,
-  classNameInvalidInput,
-  isPositiveNumber,
-} from "./validity";
+import { getElementByIdOrThrow } from "./getElement";
+import { classNameValidInput, classNameInvalidInput, isPositiveNumber } from "./validity";
 
 export class InputText {
-  private _element: HTMLInputElement;
+  private element: HTMLInputElement;
+
   public constructor(elementId: string) {
-    this._element = getElementByIdUnwrap(elementId) as HTMLInputElement;
+    this.element = getElementByIdOrThrow(HTMLInputElement, elementId);
   }
+
   public onWindowLoad(handler: (inputValue: string) => void) {
     this.validateAndUpdate(handler);
   }
+
   public onValidInput(handler: (inputValue: string) => void) {
-    this._element.addEventListener("input", () => {
+    this.element.addEventListener("input", () => {
       this.validateAndUpdate(handler);
     });
   }
+
   private validateAndUpdate(handler: (inputValue: string) => void) {
-    const value: string = this._element.value;
+    const value: string = this.element.value;
     const isValid: boolean = isPositiveNumber(value);
     if (isValid) {
-      this._element.className = classNameValidInput;
+      this.element.className = classNameValidInput;
       handler(value);
     } else {
-      this._element.className = classNameInvalidInput;
+      this.element.className = classNameInvalidInput;
     }
   }
 }

@@ -14,9 +14,8 @@ type Vector = Vector2D | Vector3D;
 export function innerProduct(v0: Vector, v1: Vector): number {
   if ("z" in v0 && "z" in v1) {
     return v0.x * v1.x + v0.y * v1.y + v0.z * v1.z;
-  } else {
-    return v0.x * v1.x + v0.y * v1.y;
   }
+  return v0.x * v1.x + v0.y * v1.y;
 }
 
 export function crossProduct(v0: Vector3D, v1: Vector3D): Vector3D {

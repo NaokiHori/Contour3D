@@ -1,11 +1,7 @@
 import { Vector3D } from "../vector";
 import { config } from "../config";
-import { getElementByIdUnwrap } from "./getElement";
-import {
-  classNameValidInput,
-  classNameInvalidInput,
-  isPositiveNumber,
-} from "./validity";
+import { getElementByIdOrThrow } from "./getElement";
+import { classNameValidInput, classNameInvalidInput, isPositiveNumber } from "./validity";
 
 function formatFloat(value: number): string {
   // "%+.15e"
@@ -21,22 +17,18 @@ function makeCodeSpace() {
     return;
   }
   pixelsPerUnitLengthInput.className = classNameValidInput;
-  const screenWidth: number = Math.round(
-    config.screenWidth * Number(pixelsPerUnitLength),
-  );
-  const screenHeight: number = Math.round(
-    config.screenHeight * Number(pixelsPerUnitLength),
-  );
+  const screenWidth: number = Math.round(config.getScreenWidth() * Number(pixelsPerUnitLength));
+  const screenHeight: number = Math.round(config.getScreenHeight() * Number(pixelsPerUnitLength));
   //
-  const cameraPosition: Vector3D = config.cameraPosition;
+  const cameraPosition: Vector3D = config.getCameraPosition();
   const {
     horizontal: screenHorizontal,
     vertical: screenVertical,
   }: {
     horizontal: Vector3D;
     vertical: Vector3D;
-  } = config.screenVectors;
-  const screenCenter: Vector3D = config.screenCenter;
+  } = config.getScreenVectors();
+  const screenCenter: Vector3D = config.getScreenCenter();
   //
   const vectorType = "contour3d_vector_t";
   let code = "";
@@ -76,14 +68,10 @@ function makeCodeSpace() {
   codeSpace.innerHTML = code;
 }
 
-const modal = getElementByIdUnwrap("code-modal") as HTMLDialogElement;
-const modalCloseButton = getElementByIdUnwrap(
-  "code-modal-close-button",
-) as HTMLButtonElement;
-const pixelsPerUnitLengthInput = getElementByIdUnwrap(
-  "pixels-per-unit-length",
-) as HTMLInputElement;
-const codeSpace = getElementByIdUnwrap("code-space");
+const modal = getElementByIdOrThrow(HTMLDialogElement, "code-modal");
+const modalCloseButton = getElementByIdOrThrow(HTMLButtonElement, "code-modal-close-button");
+const pixelsPerUnitLengthInput = getElementByIdOrThrow(HTMLInputElement, "pixels-per-unit-length");
+const codeSpace = getElementByIdOrThrow(HTMLElement, "code-space");
 
 pixelsPerUnitLengthInput.addEventListener("input", () => {
   makeCodeSpace();

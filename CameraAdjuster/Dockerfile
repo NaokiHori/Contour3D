@@ -1,16 +1,10 @@
-FROM node:latest
+FROM node:alpine
 
-WORKDIR /project
-RUN npm init -y --init-type=module
-RUN npm install --save-dev \
-  @types/node \
-  prettier \
-  typescript \
-  typescript-eslint \
-  vite
+RUN mkdir /app && chown node:node /app
+USER node
+WORKDIR /app
 
-WORKDIR /project/src
+COPY --chown=node:node tools/package.json tools/package-lock.json .
+RUN npm ci --ignore-scripts
 
-EXPOSE 5173
-
-CMD ["npx", "vite", "--host"]
+COPY --chown=node:node tools/.oxlintrc.json tools/tsconfig.json tools/vite.config.ts .

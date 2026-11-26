@@ -1,12 +1,12 @@
 import { config } from "../config";
-import { getElementByIdUnwrap } from "./getElement";
+import { getElementByIdOrThrow } from "./getElement";
 import { syncCanvasSize, updateCanvas } from "./canvas";
 
 const menuItems = [
-  getElementByIdUnwrap("screen-size") as HTMLDivElement,
-  getElementByIdUnwrap("distance") as HTMLDivElement,
-  getElementByIdUnwrap("box-size") as HTMLDivElement,
-  getElementByIdUnwrap("angle") as HTMLDivElement,
+  getElementByIdOrThrow(HTMLDivElement, "screen-size"),
+  getElementByIdOrThrow(HTMLDivElement, "distance"),
+  getElementByIdOrThrow(HTMLDivElement, "box-size"),
+  getElementByIdOrThrow(HTMLDivElement, "angle"),
 ];
 const numberOfItems = menuItems.length;
 
@@ -33,8 +33,8 @@ function goToRight() {
 }
 
 const buttons = {
-  left: getElementByIdUnwrap("menu-go-to-left") as HTMLButtonElement,
-  right: getElementByIdUnwrap("menu-go-to-right") as HTMLButtonElement,
+  left: getElementByIdOrThrow(HTMLButtonElement, "menu-go-to-left"),
+  right: getElementByIdOrThrow(HTMLButtonElement, "menu-go-to-right"),
 };
 
 export function initMenuItems() {

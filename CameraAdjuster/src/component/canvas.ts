@@ -1,4 +1,4 @@
-import { getElementByIdUnwrap } from "./getElement";
+import { getElementByIdOrThrow } from "./getElement";
 import { Vector3D } from "../vector";
 import { Config } from "../config";
 import { BoundingBox, getBoundingBox } from "./canvas/boundingBox";
@@ -8,7 +8,7 @@ import { drawLineSegments } from "./canvas/drawLineSegments";
 import { drawAxes } from "./canvas/drawAxes";
 import { showModal } from "./modal";
 
-export const canvas = getElementByIdUnwrap("main-canvas") as HTMLCanvasElement;
+export const canvas = getElementByIdOrThrow(HTMLCanvasElement, "main-canvas");
 
 canvas.addEventListener("click", () => {
   showModal();
@@ -29,7 +29,7 @@ export function syncCanvasSize() {
 export function updateCanvas(config: Config) {
   const boundingBox: BoundingBox = getBoundingBox(
     canvas,
-    config.screenWidth / config.screenHeight,
+    config.getScreenWidth() / config.getScreenHeight(),
   );
   const screenWidth: number = boundingBox.imax - boundingBox.imin + 1;
   const screenHeight: number = boundingBox.jmax - boundingBox.jmin + 1;
@@ -37,7 +37,7 @@ export function updateCanvas(config: Config) {
   if (ctx === null) {
     throw new Error("failed to get context");
   }
-  const cameraPosition: Vector3D = config.cameraPosition;
+  const cameraPosition: Vector3D = config.getCameraPosition();
   const {
     horizontal: screenHorizontal,
     vertical: screenVertical,
@@ -46,8 +46,8 @@ export function updateCanvas(config: Config) {
     horizontal: Vector3D;
     vertical: Vector3D;
     normal: Vector3D;
-  } = config.screenVectors;
-  const screenCenter: Vector3D = config.screenCenter;
+  } = config.getScreenVectors();
+  const screenCenter: Vector3D = config.getScreenCenter();
   // draw
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   if (screenWidth <= 0 || screenHeight <= 0) {
@@ -61,20 +61,13 @@ export function updateCanvas(config: Config) {
     screenNormal,
     screenCenter,
     {
-      x: config.boxSizeX,
-      y: config.boxSizeY,
-      z: config.boxSizeZ,
+      x: config.getBoxSizeX(),
+      y: config.getBoxSizeY(),
+      z: config.getBoxSizeZ(),
     } satisfies Vector3D,
     imageData,
   );
-  drawAxes(
-    cameraPosition,
-    screenHorizontal,
-    screenVertical,
-    screenNormal,
-    screenCenter,
-    imageData,
-  );
+  drawAxes(cameraPosition, screenHorizontal, screenVertical, screenNormal, screenCenter, imageData);
   drawEdges(imageData);
   ctx.putImageData(imageData, boundingBox.imin, boundingBox.jmin);
   drawCaption(ctx);

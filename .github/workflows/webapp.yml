@@ -1,52 +1,54 @@
-name: WebApp
-
-on:
-  workflow_dispatch:
-
 concurrency:
-  group: "pages"
   cancel-in-progress: true
-
+  group: "pages"
 jobs:
-  build-and-deploy:
-    name: Build and deploy
+  build:
+    env:
+      ARTIFACT: "dist"
+      WEB_APP_DIR: "CameraAdjuster"
+    name: Build
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.0
+        with:
+          persist-credentials: false
+      - name: Build Docker image
+        run: |
+          cd ${{ env.WEB_APP_DIR }}
+          make build-image
+      - name: Perform quality checks and build artifacts
+        run: |
+          cd ${{ env.WEB_APP_DIR }}
+          make polish
+          make build \
+            ARTIFACT=${{ env.ARTIFACT }}
+      - name: Upload artifacts
+        uses: actions/upload-pages-artifact@v5.0.0
+        with:
+          path: ${{ env.WEB_APP_DIR }}/${{ env.ARTIFACT }}
+    timeout-minutes: 5
+  deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    name: Deploy
+    needs: build
     permissions:
-      contents: read
-      pages: write
       id-token: write
+      pages: write
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
-      - name: Build Docker image
-        run: |
-          cd CameraAdjuster
-          docker compose build
-          cd ..
-      - name: Quality checks
-        run: |
-          cd CameraAdjuster
-          docker compose run --rm app npx tsc
-          docker compose run --rm app npx prettier . --check
-          docker compose run --rm app npx eslint .
-          cd ..
-      - name: Build
-        run: |
-          cd CameraAdjuster
-          docker compose run --rm app npx \
-            vite build \
-            --outDir=dist \
-            --base=https://naokihori.github.io/Contour3D/
-          cd ..
-      - name: Setup GitHub Pages
-        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
-      - name: Upload artifacts
-        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
-        with:
-          path: CameraAdjuster/dist
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5.0.0
+      - id: configure_pages
+        name: Setup GitHub Pages
+        uses: actions/configure-pages@v6.0.0
+      - id: deployment
+        name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v5.0.0
+    timeout-minutes: 5
+name: DeployWebApp
+on:
+  workflow_dispatch: {}
+permissions: {}

@@ -30,49 +30,49 @@ const angle = {
 //   2. invoked when the window is loaded
 const handleScreenSizeInput = {
   width: (inputValue: string): void => {
-    config.screenWidth = Number(inputValue);
+    config.setScreenWidth(Number(inputValue));
     updateCanvas(config);
   },
   height: (inputValue: string): void => {
-    config.screenHeight = Number(inputValue);
+    config.setScreenHeight(Number(inputValue));
     updateCanvas(config);
   },
 };
 const handleDistanceInput = {
   screen: (inputValue: string): void => {
-    config.focalScreenDistance = Number(inputValue);
+    config.setFocalScreenDistance(Number(inputValue));
     updateCanvas(config);
   },
   camera: (inputValue: string): void => {
-    config.focalCameraDistance = Number(inputValue);
+    config.setFocalCameraDistance(Number(inputValue));
     updateCanvas(config);
   },
 };
 const handleBoxSizeInput = {
   x: (inputValue: string): void => {
-    config.boxSizeX = Number(inputValue);
+    config.setBoxSizeX(Number(inputValue));
     updateCanvas(config);
   },
   y: (inputValue: string): void => {
-    config.boxSizeY = Number(inputValue);
+    config.setBoxSizeY(Number(inputValue));
     updateCanvas(config);
   },
   z: (inputValue: string): void => {
-    config.boxSizeZ = Number(inputValue);
+    config.setBoxSizeZ(Number(inputValue));
     updateCanvas(config);
   },
 };
 const handleAngleInput = {
   elevation: (inputValue: string): void => {
-    config.elevation = Number(inputValue);
+    config.setElevation(Number(inputValue));
     updateCanvas(config);
   },
   azimuth: (inputValue: string): void => {
-    config.azimuth = Number(inputValue);
+    config.setAzimuth(Number(inputValue));
     updateCanvas(config);
   },
   roll: (inputValue: string): void => {
-    config.roll = Number(inputValue);
+    config.setRoll(Number(inputValue));
     updateCanvas(config);
   },
 };
