@@ -1,6 +1,6 @@
 # Contour 3D
 
-![Cover](https://github.com/NaokiHori/Contour3D/blob/main/cover.jpg)
+![Cover](./cover.jpg)
 
 ## Overview
 
@@ -66,7 +66,7 @@ To address this, I offer [a simple web application](https://naokihori.github.io/
 
     Find `output.ppm`, which is the result of the 3D contouring:
 
-    <img src="https://github.com/NaokiHori/Contour3D/blob/artifact/output.jpg" alt="Sample Image" width="80%" />
+    <img src="./sample.jpg" alt="Sample Image" width="80%" />
 
 ## Method
 
